@@ -1,22 +1,16 @@
-import { Stack } from 'expo-router';
-import { StyleSheet, View } from 'react-native';
+import React from 'react';
+import { View, Text, FlatList, ScrollView } from 'react-native';
 
-import { ScreenContent } from '~/components/ScreenContent';
-
-export default function Home() {
+import { events } from '~/assets/data';
+import EventItem from '~/components/EventItem';
+const FeedScreen = () => {
   return (
-    <>
-      <Stack.Screen options={{ title: 'Tab One' }} />
-      <View style={styles.container}>
-        <ScreenContent path="app/(tabs)/index.tsx" title="Tab One" />
-      </View>
-    </>
+    <ScrollView showsVerticalScrollIndicator={false} className="m-4 flex-1  py-4">
+      {events.map((event) => (
+        <EventItem key={event.id} event={event} />
+      ))}
+    </ScrollView>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 24,
-  },
-});
+export default FeedScreen;

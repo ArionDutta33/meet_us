@@ -12,12 +12,12 @@ export default function TabLayout() {
         tabBarActiveTintColor: 'orange', // Active icon color
         tabBarInactiveTintColor: 'gray', // Inactive icon color
         tabBarShowLabel: false, // Optionally hide labels
-        tabBarStyle: {
-          backgroundColor: 'white',
-          marginBottom: 20,
-          marginHorizontal: 20,
-          borderRadius: 20,
-        },
+        // tabBarStyle: {
+        //   backgroundColor: 'white',
+        //   marginBottom: 20,
+        //   marginHorizontal: 20,
+        //   borderRadius: 20,
+        // },
       }}>
       <Tabs.Screen
         name="index" // This corresponds to app/index.js or app/index/index.js
