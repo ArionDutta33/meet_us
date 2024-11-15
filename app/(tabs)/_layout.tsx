@@ -33,14 +33,14 @@ export default function TabLayout() {
       <Tabs.Screen
         name="create"
         options={{
-          title: 'Tab Create',
+          title: 'Create Meetup',
           tabBarIcon: ({ color }) => <AntDesign name="plus" size={20} color={color} />, // Use the color prop here
         }}
       />
       <Tabs.Screen
-        name="two"
+        name="location"
         options={{
-          title: 'Tab Two',
+          title: ' Locate',
           tabBarIcon: ({ color }) => <TabBarIcon name="map" size={20} color={color} />, // Use the color prop here
         }}
       />
