@@ -3,7 +3,6 @@ import { View, Text, Image, useWindowDimensions } from 'react-native';
 
 import { eventType } from '~/assets/data';
 const EventItem = ({ event }: { event: eventType }) => {
-  console.log('This is event', JSON.stringify(event, null, 2));
   return (
     <View className="m-4 overflow-hidden rounded-2xl border border-gray-300 ">
       <Image
