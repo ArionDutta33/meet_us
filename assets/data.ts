@@ -138,3 +138,49 @@ export const events = [
     ],
   },
 ];
+
+export const user = {
+  user: {
+    id: 1,
+    email: 'johndoe@example.com',
+    full_name: 'John Doe',
+    bio: 'Tech enthusiast, meetup organizer, and software developer.',
+    profile_picture_url: 'https://randomuser.me/api/portraits/men/23.jpg',
+    cover_photo_url:
+      'https://images.pexels.com/photos/546819/pexels-photo-546819.jpeg?auto=compress&cs=tinysrgb&w=600',
+    location: 'San Francisco, CA',
+    created_at: '2024-01-01T12:00:00Z',
+    updated_at: '2024-10-10T14:30:00Z',
+  },
+  events: [
+    {
+      id: 101,
+      user_id: 1,
+      title: 'React Native Meetup',
+      description: 'A meetup for React Native developers to share ideas and work on projects.',
+      event_date: '2024-10-15T18:00:00Z',
+      location: '123 Tech Street, San Francisco, CA',
+      max_attendees: 50,
+      status: 'active',
+      cover_photo_url: 'https://example.com/images/react-native-meetup-cover.jpg',
+      created_at: '2024-10-01T08:00:00Z',
+      updated_at: '2024-10-01T08:00:00Z',
+      rsvp_status: 'going',
+    },
+    {
+      id: 102,
+      user_id: 1,
+      title: 'Vue.js Developers Meetup',
+      description: 'A meetup for Vue.js enthusiasts to learn and discuss new features.',
+      event_date: '2024-10-18T19:00:00Z',
+      location: '456 Dev Ave, San Francisco, CA',
+      max_attendees: 30,
+      status: 'active',
+      cover_photo_url: 'https://example.com/images/vuejs-meetup-cover.jpg',
+      created_at: '2024-10-02T08:00:00Z',
+      updated_at: '2024-10-02T08:00:00Z',
+      rsvp_status: 'maybe',
+    },
+  ],
+  interests: ['Technology', 'Startups', 'Programming Languages'],
+};

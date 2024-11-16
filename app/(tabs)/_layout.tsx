@@ -1,28 +1,29 @@
 import { Entypo } from '@expo/vector-icons';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import { Link, Tabs } from 'expo-router';
+import { Link, Redirect, Tabs } from 'expo-router';
 
 import { HeaderButton } from '../../components/HeaderButton';
 import { TabBarIcon } from '../../components/TabBarIcon';
 
+import { useAuth } from '~/context/AuthProvider';
+
 export default function TabLayout() {
+  const { isAuthenticated } = useAuth();
+  if (!isAuthenticated) {
+    return <Redirect href="/(auth)/login" />;
+  }
+  // console.log(user);
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: 'orange', // Active icon color
-        tabBarInactiveTintColor: 'gray', // Inactive icon color
-        tabBarShowLabel: false, // Optionally hide labels
-        // tabBarStyle: {
-        //   backgroundColor: 'white',
-        //   marginBottom: 20,
-        //   marginHorizontal: 20,
-        //   borderRadius: 20,
-        // },
+        tabBarActiveTintColor: 'orange',
+        tabBarInactiveTintColor: 'gray',
+        tabBarShowLabel: false,
       }}>
       <Tabs.Screen
-        name="index" // This corresponds to app/index.js or app/index/index.js
+        name="index"
         options={{
-          title: 'Home', // Title shown in the tab bar
+          title: 'Home',
           tabBarIcon: ({ color }) => <Entypo name="home" size={24} color={color} />,
           headerRight: () => (
             <Link href="/modal" asChild>
@@ -32,17 +33,31 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="create" // This corresponds to app/create.js or app/create/index.js
+        name="location"
         options={{
-          title: 'New', // Title shown in the tab bar
+          title: 'Locate',
+          tabBarIcon: ({ color }) => <TabBarIcon name="map" size={20} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="create"
+        options={{
+          title: 'New',
           tabBarIcon: ({ color }) => <AntDesign name="pluscircleo" size={22} color={color} />,
         }}
       />
       <Tabs.Screen
-        name="location" // This corresponds to app/location.js or app/location/index.js
+        name="ProfileScreen"
         options={{
-          title: 'Locate', // Title shown in the tab bar
-          tabBarIcon: ({ color }) => <TabBarIcon name="map" size={20} color={color} />,
+          title: 'Profile',
+          tabBarIcon: ({ color }) => <AntDesign name="user" size={22} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="Favourites"
+        options={{
+          title: 'Favourites',
+          tabBarIcon: ({ color }) => <AntDesign name="hearto" size={22} color={color} />,
         }}
       />
     </Tabs>
