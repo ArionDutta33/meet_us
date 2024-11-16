@@ -12,7 +12,6 @@ export default function TabLayout() {
   if (!isAuthenticated) {
     return <Redirect href="/(auth)/login" />;
   }
-  // console.log(user);
   return (
     <Tabs
       screenOptions={{

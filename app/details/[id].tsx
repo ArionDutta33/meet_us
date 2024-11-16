@@ -5,7 +5,6 @@ import { View, Text, Image, Pressable } from 'react-native';
 import { events } from '~/assets/data';
 const singleEvent = events[0];
 const DetailsScreen = () => {
-  console.log(JSON.stringify(singleEvent, null, 2));
   const { id } = useLocalSearchParams();
   return (
     <View className="mx-4 flex-1 py-8">

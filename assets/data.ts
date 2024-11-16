@@ -162,7 +162,8 @@ export const user = {
       location: '123 Tech Street, San Francisco, CA',
       max_attendees: 50,
       status: 'active',
-      cover_photo_url: 'https://example.com/images/react-native-meetup-cover.jpg',
+      cover_photo_url:
+        'https://images.pexels.com/photos/8761327/pexels-photo-8761327.jpeg?auto=compress&cs=tinysrgb',
       created_at: '2024-10-01T08:00:00Z',
       updated_at: '2024-10-01T08:00:00Z',
       rsvp_status: 'going',
@@ -176,7 +177,8 @@ export const user = {
       location: '456 Dev Ave, San Francisco, CA',
       max_attendees: 30,
       status: 'active',
-      cover_photo_url: 'https://example.com/images/vuejs-meetup-cover.jpg',
+      cover_photo_url:
+        'https://images.pexels.com/photos/3321791/pexels-photo-3321791.jpeg?auto=compress&cs=tinysrgb',
       created_at: '2024-10-02T08:00:00Z',
       updated_at: '2024-10-02T08:00:00Z',
       rsvp_status: 'maybe',
