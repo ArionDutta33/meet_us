@@ -1,4 +1,3 @@
-import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { Alert, StyleSheet, View, AppState, TextInput, Button } from 'react-native';
 

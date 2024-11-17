@@ -1,12 +1,61 @@
 import { AntDesign } from '@expo/vector-icons';
-import React from 'react';
-import { View, Text, Image, ScrollView, TextInput, Pressable } from 'react-native';
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  Image,
+  ScrollView,
+  TextInput,
+  Pressable,
+  Alert,
+  ActivityIndicator,
+} from 'react-native';
 import Swiper from 'react-native-swiper';
 
 import { user } from '~/assets/data';
 import SwipperEvent from '~/components/SwipperEvent';
+import { useAuth } from '~/context/AuthProvider';
+import { supabase } from '~/lib/supabase';
 
 const ProfileScreen = () => {
+  //state values
+  const [fullName, setFullName] = useState<string>('');
+  const [bio, setBio] = useState<string>('');
+  const [address, setAddress] = useState<string>('');
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  //get the authenticated user email
+  const { user: authenticatedUser } = useAuth();
+
+  //handle profile update
+  const onUpdateProfile = async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('profiles')
+      .upsert({
+        id: authenticatedUser?.id,
+        full_name: fullName,
+        bio,
+        address,
+        cover_image: user.user.cover_photo_url,
+      })
+      .select();
+    if (error) {
+      setLoading(false);
+      Alert.alert(error.message);
+      console.log(error);
+    }
+    setLoading(false);
+    console.log(data);
+  };
+  if (loading) {
+    return (
+      <View className="flex-1 items-center justify-center">
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
   return (
     <ScrollView showsVerticalScrollIndicator={false} className="flex-1 ">
       <View className="relative my-4 items-center  ">
@@ -36,7 +85,8 @@ const ProfileScreen = () => {
       <View className="mx-4 gap-4  ">
         <Text>Name</Text>
         <TextInput
-          value={user.user.full_name}
+          onChangeText={setFullName}
+          value={fullName}
           placeholder="Enter your name"
           className="border border-gray-400"
         />
@@ -44,7 +94,8 @@ const ProfileScreen = () => {
       <View className="mx-4 my-4 gap-4  ">
         <Text>Bio</Text>
         <TextInput
-          value={user.user.bio}
+          onChangeText={setBio}
+          value={bio}
           multiline
           numberOfLines={3}
           placeholder="Enter your bio"
@@ -54,19 +105,28 @@ const ProfileScreen = () => {
       <View className="mx-4 gap-4  ">
         <Text>Email</Text>
         <TextInput
-          value={user.user.email}
+          value={authenticatedUser?.email}
           placeholder="Enter your email"
-          className="border border-gray-400"
+          className="border border-gray-400 text-gray-500"
         />
       </View>
-      <Pressable className="mx-4 my-6 rounded-lg   bg-blue-500 py-4 ">
+      <View className="mx-4 my-4 gap-4  ">
+        <Text>Address</Text>
+        <TextInput
+          onChangeText={setAddress}
+          value={address}
+          placeholder="Enter your address"
+          className="border border-gray-400 text-gray-500"
+        />
+      </View>
+      <Pressable onPress={onUpdateProfile} className="mx-4 my-6 rounded-lg   bg-blue-500 py-4 ">
         <Text className="text-center font-bold text-white">Update Profile</Text>
       </Pressable>
       <View className="mx-4 my-6  h-72 gap-4  ">
         <Text>Events Organised</Text>
         <Swiper className=" ">
-          {user.events.map((event) => (
-            <SwipperEvent events={event} />
+          {user.events.map((event, index) => (
+            <SwipperEvent key={index} events={event} />
           ))}
         </Swiper>
       </View>

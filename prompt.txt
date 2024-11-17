@@ -1,0 +1,55 @@
+so as i said i have made a meetup app where people can organise and attend meetups i plan to have things like when user creates a meetup it will show on map i have used google maps api and also end users should be able to find distance to their target meetups location  ...what table to make in supabase
+
+
+
+user table
+-- Users Table (Supabase Auth)
+-- This table is automatically created by Supabase when you enable Auth
+-- It contains columns like id, email, password, etc.
+create table auth.users (
+  id uuid primary key, -- User's unique ID
+  email text not null, -- User's email
+  created_at timestamp with time zone default now(), -- Date user registered
+  updated_at timestamp with time zone default now() -- Last update date
+);
+
+
+profile table
+-- User Profile Table (Optional)
+create table user_profiles (
+  id uuid references auth.users(id) on delete cascade primary key, -- Link to user's auth record
+  full_name text, -- User's full name
+  bio text, -- Short biography or description
+  location_name text, -- User's general location (e.g., city or country)
+  latitude double precision, -- User's latitude for location
+  longitude double precision, -- User's longitude for location
+  profile_picture_url text, -- URL for user's profile picture
+  cover_photo_url text, -- URL for user's cover photo
+  created_at timestamp with time zone default now(),
+  updated_at timestamp with time zone default now()
+);
+
+
+-- Meetups Table
+create table meetups (
+  id serial primary key, -- Unique ID for each meetup
+  user_id uuid references auth.users(id) on delete cascade, -- Creator of the meetup (linked to the Users table)
+  title text not null, -- Title of the meetup
+  description text not null, -- Description of the meetup
+  location_name text not null, -- Name of the location (e.g., "Tech Conference Center")
+  latitude double precision not null, -- Latitude of the meetup location
+  longitude double precision not null, -- Longitude of the meetup location
+  event_date timestamp with time zone not null, -- Date and time of the event
+  max_attendees integer not null, -- Maximum number of attendees
+  status text default 'active', -- Status of the meetup (active, cancelled, etc.)
+  created_at timestamp with time zone default now(),
+  updated_at timestamp with time zone default now()
+);  
+-- Meetup Attendees Table
+create table meetup_attendees (
+  id serial primary key, -- Unique ID for the attendee entry
+  meetup_id integer references meetups(id) on delete cascade, -- Link to the meetup
+  user_id uuid references auth.users(id) on delete cascade, -- User attending the meetup
+  status text check(status in ('going', 'maybe', 'not_going')) default 'maybe', -- RSVP status
+  created_at timestamp with time zone default now()
+);
