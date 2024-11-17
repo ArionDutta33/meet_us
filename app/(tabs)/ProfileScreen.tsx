@@ -14,8 +14,6 @@ import Swiper from 'react-native-swiper';
 
 import { user } from '~/assets/data';
 import SwipperEvent from '~/components/SwipperEvent';
-import { useAuth } from '~/context/AuthProvider';
-import { supabase } from '~/lib/supabase';
 
 const ProfileScreen = () => {
   //state values
@@ -26,49 +24,16 @@ const ProfileScreen = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   //get the authenticated user email
-  const { user: authenticatedUser } = useAuth();
 
   //get user profile
-  const getProfile = async () => {
-    setLoading(true);
-    const { data: profiles, error } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', authenticatedUser?.id)
-      .single();
-    if (!error) {
-      setFullName(profiles.full_name);
-      setBio(profiles.bio);
-      setAddress(profiles.address);
-    }
-    setLoading(false);
-  };
+  const getProfile = async () => {};
 
   useEffect(() => {
     getProfile();
   }, []);
 
   //handle profile update
-  const onUpdateProfile = async () => {
-    setLoading(true);
-    const { data, error } = await supabase
-      .from('profiles')
-      .upsert({
-        id: authenticatedUser?.id,
-        full_name: fullName,
-        bio,
-        address,
-        cover_image: user.user.cover_photo_url,
-      })
-      .select();
-    if (error) {
-      setLoading(false);
-      Alert.alert(error.message);
-      console.log(error);
-    }
-    setLoading(false);
-    console.log(data);
-  };
+  const onUpdateProfile = async () => {};
   if (loading) {
     return (
       <View className="flex-1 items-center justify-center">
@@ -151,9 +116,7 @@ const ProfileScreen = () => {
       <Pressable onPress={onUpdateProfile} className="mx-4 my-6 rounded-lg   bg-blue-500 py-4 ">
         <Text className="text-center font-bold text-white">Update Profile</Text>
       </Pressable>
-      <Pressable
-        onPress={() => supabase.auth.signOut()}
-        className="mx-4  rounded-lg   bg-blue-500 py-4 ">
+      <Pressable className="mx-4  rounded-lg   bg-blue-500 py-4 ">
         <Text className="text-center font-bold text-white">Sign Out</Text>
       </Pressable>
       <View className="mx-4 my-6  h-72 gap-4  ">

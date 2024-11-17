@@ -16,9 +16,6 @@ import {
   ActivityIndicator,
 } from 'react-native';
 
-import { useAuth } from '~/context/AuthProvider';
-import { supabase } from '~/lib/supabase';
-
 const Create = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -32,7 +29,6 @@ const Create = () => {
   const [longitude, setLongitutde] = useState(0);
   const [status, setStatus] = useState('');
   //get the authenticateduser
-  const { session } = useAuth();
 
   //get geocoding data
   const geoCode = async () => {
@@ -51,41 +47,7 @@ const Create = () => {
   };
 
   //handle submission
-  const handleSubmit = async () => {
-    setLoading(true);
-    try {
-      await geoCode();
-      const { data, error } = await supabase
-        .from('meetups')
-        .insert([
-          {
-            user_id: session?.user.id,
-            title,
-            description,
-            location,
-            event_date: date,
-            max_attendees: attendees,
-            latitude,
-            longitude,
-            status,
-            photos: [
-              'https://images.pexels.com/photos/7689853/pexels-photo-7689853.jpeg?auto=compress&cs=tinysrgb&w=600',
-            ],
-          },
-        ])
-
-        .select();
-      if (error) {
-        Alert.alert(error.message);
-        setLoading(false);
-        console.log(error);
-      }
-      setLoading(false);
-    } catch (error: any) {
-      Alert.alert(error.message);
-      setLoading(false);
-    }
-  };
+  const handleSubmit = async () => {};
 
   // Toggle the visibility of the date picker
   const toggleDatePicker = () => {
