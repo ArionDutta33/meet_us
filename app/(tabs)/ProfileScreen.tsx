@@ -10,6 +10,7 @@ import {
   Pressable,
   Alert,
   ActivityIndicator,
+  ToastAndroid,
 } from 'react-native';
 import Swiper from 'react-native-swiper';
 
@@ -44,6 +45,8 @@ const ProfileScreen = () => {
     } catch (error) {
       setLoading(false);
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -53,24 +56,40 @@ const ProfileScreen = () => {
 
   //handle profile update
   const onUpdateProfile = async () => {
-    const updatedData = await axios.put(`${process.env.EXPO_PUBLIC_API}/profile/${user?._id}`, {
-      fullName,
-      bio,
-      address,
-      coverPicture:
-        'https://images.pexels.com/photos/3321797/pexels-photo-3321797.jpeg?auto=compress&cs=tinysrgb',
-      profilePicture: 'https://randomuser.me/api/portraits/women/32.jpg',
-    });
-    console.log('updated data', JSON.stringify(updatedData, null, 2));
-    console.log('hello');
+    setLoading(true);
+    try {
+      const updatedData = await axios.put(`${process.env.EXPO_PUBLIC_API}/profile/${user?._id}`, {
+        fullName,
+        bio,
+        address,
+        coverPicture:
+          'https://images.pexels.com/photos/3321797/pexels-photo-3321797.jpeg?auto=compress&cs=tinysrgb',
+        profilePicture: 'https://randomuser.me/api/portraits/women/32.jpg',
+      });
+      if (updatedData.status === 201) {
+        ToastAndroid.show('Profile updated successfully', ToastAndroid.SHORT);
+        setLoading(false);
+      } else {
+        ToastAndroid.show('Failed to update profile', ToastAndroid.SHORT);
+        setLoading(false);
+        console.log(updatedData);
+      }
+    } catch (error) {
+      setLoading(false);
+      ToastAndroid.show(`${error}`, ToastAndroid.SHORT);
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   };
-  // if (loading) {
-  //   return (
-  //     <View className="flex-1 items-center justify-center">
-  //       <ActivityIndicator size="large" />
-  //     </View>
-  //   );
-  // }
+  console.log(loading);
+  if (loading) {
+    return (
+      <View className="flex-1 items-center  justify-center">
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
   return (
     <ScrollView showsVerticalScrollIndicator={false} className="flex-1 ">
       <View className="relative my-4 items-center  ">
