@@ -2,7 +2,11 @@ import { Link, Stack } from 'expo-router';
 import React from 'react';
 import { View, Text, Pressable, Image } from 'react-native';
 
+import { useAuth } from '~/context/AuthProvider';
+
 const OnBoardScreen = () => {
+  const { user } = useAuth();
+  console.log('user', JSON.stringify(user, null, 2));
   return (
     <>
       <Stack.Screen options={{ headerShown: false }} />

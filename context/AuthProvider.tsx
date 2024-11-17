@@ -30,8 +30,6 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
           const { token, user } = JSON.parse(data);
           setUser(user);
           setToken(token);
-          console.log(JSON.stringify(user, null, 2));
-          console.log(token);
         }
       } catch (error) {
         console.error('Error fetching authentication data:', error);

@@ -13,35 +13,53 @@ const Auth = () => {
     setLoading(true);
     setError('');
     try {
-      if (email === '' || password === '') {
+      // Basic validation: Check if fields are empty or just contain spaces
+      if (!email.trim() || !password.trim()) {
         setError('All fields are required');
+        setLoading(false);
         return;
       }
 
-      const data = await axios.post(`${process.env.EXPO_PUBLIC_API}/login`, {
+      // Make the login request
+      const response = await axios.post(`${process.env.EXPO_PUBLIC_API}/login`, {
         email,
         password,
       });
-      if (data.status === 200) {
+
+      // Handle successful response
+      if (response.status === 200) {
+        setLoading(false);
+
+        // Assuming the response contains a user object without the password and a token
+        const { userWithoutPassword, token } = response.data;
+
+        // Save user data and token in AsyncStorage
+        await AsyncStorage.setItem('@auth', JSON.stringify({ user: userWithoutPassword, token }));
+
+        // Clear input fields
         setEmail('');
         setPassword('');
-        setLoading(false);
-        console.log(JSON.stringify(data, null, 2));
-        await AsyncStorage.setItem(
-          '@auth',
-          JSON.stringify({ user: data.data.userWithoutPassword, token: data.data.token })
-        );
+
+        // Show success toast
         ToastAndroid.show('Login successful', ToastAndroid.LONG);
+      } else {
+        setLoading(false);
+        setError('Unexpected response from server');
       }
     } catch (error) {
       setLoading(false);
-      console.log(error);
+
+      // More specific error handling (e.g., network error or wrong credentials)
+
+      console.log('Login error:', error);
     }
   };
+
   const onHandleRegister = async () => {
     setLoading(true);
     if (email === '' || password === '') {
       setError('All fields are required');
+      setLoading(false);
       return;
     }
     setError('');

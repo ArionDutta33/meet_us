@@ -139,7 +139,7 @@ export const events = [
   },
 ];
 
-export const user = {
+export const demoUser = {
   user: {
     id: 1,
     email: 'johndoe@example.com',

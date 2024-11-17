@@ -1,7 +1,7 @@
 import { Redirect, Stack } from 'expo-router';
 
 import '../global.css';
-import AuthProvider, { useAuth } from '~/context/AuthProvider';
+import AuthProvider from '~/context/AuthProvider';
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.

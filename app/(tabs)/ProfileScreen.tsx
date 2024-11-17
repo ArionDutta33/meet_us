@@ -1,4 +1,5 @@
 import { AntDesign } from '@expo/vector-icons';
+import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import {
   View,
@@ -12,35 +13,64 @@ import {
 } from 'react-native';
 import Swiper from 'react-native-swiper';
 
-import { user } from '~/assets/data';
+import { demoUser } from '~/assets/data';
 import SwipperEvent from '~/components/SwipperEvent';
+import { useAuth } from '~/context/AuthProvider';
 
 const ProfileScreen = () => {
   //state values
-  const [fullName, setFullName] = useState<string>('');
+  const [fullName, setFullName] = useState<string | null>('');
   const [bio, setBio] = useState<string>('');
   const [address, setAddress] = useState<string>('');
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState<boolean>(false);
 
+  const { user } = useAuth();
+
   //get the authenticated user email
 
   //get user profile
-  const getProfile = async () => {};
+  const getProfile = async () => {
+    setLoading(true);
+    try {
+      const data = await axios.get(`${process.env.EXPO_PUBLIC_API}/profile/${user?._id}`);
+      if (data.data.status === '201') {
+        setFullName(data.data.user.fullName);
+        setBio(data.data.user.bio);
+        setAddress(data.data.user.address);
+        setEvents(data.data.user.events);
+        setLoading(false);
+      }
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     getProfile();
   }, []);
 
   //handle profile update
-  const onUpdateProfile = async () => {};
-  if (loading) {
-    return (
-      <View className="flex-1 items-center justify-center">
-        <ActivityIndicator size="large" />
-      </View>
-    );
-  }
+  const onUpdateProfile = async () => {
+    const updatedData = await axios.put(`${process.env.EXPO_PUBLIC_API}/profile/${user?._id}`, {
+      fullName,
+      bio,
+      address,
+      coverPicture:
+        'https://images.pexels.com/photos/3321797/pexels-photo-3321797.jpeg?auto=compress&cs=tinysrgb',
+      profilePicture: 'https://randomuser.me/api/portraits/women/32.jpg',
+    });
+    console.log('updated data', JSON.stringify(updatedData, null, 2));
+    console.log('hello');
+  };
+  // if (loading) {
+  //   return (
+  //     <View className="flex-1 items-center justify-center">
+  //       <ActivityIndicator size="large" />
+  //     </View>
+  //   );
+  // }
   return (
     <ScrollView showsVerticalScrollIndicator={false} className="flex-1 ">
       <View className="relative my-4 items-center  ">
@@ -49,7 +79,7 @@ const ProfileScreen = () => {
           style={{ width: 300, height: 200 }}
           source={{
             uri:
-              user.user.cover_photo_url ||
+              user?.coverPicture ||
               'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
           }}
         />
@@ -58,7 +88,7 @@ const ProfileScreen = () => {
           style={{ width: 100, height: 100 }}
           source={{
             uri:
-              user.user.profile_photo_url ||
+              user?.profilePicture ||
               'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
           }}
         />
@@ -99,7 +129,7 @@ const ProfileScreen = () => {
         <Text>Email</Text>
         <TextInput
           editable={false}
-          value={authenticatedUser?.email}
+          value={user?.email}
           placeholder="Enter your email"
           className="border border-gray-400 text-gray-500"
         />
@@ -122,7 +152,7 @@ const ProfileScreen = () => {
       <View className="mx-4 my-6  h-72 gap-4  ">
         <Text>Events Organised</Text>
         <Swiper className=" ">
-          {user.events.map((event, index) => (
+          {demoUser.events.map((event, index) => (
             <SwipperEvent key={index} events={event} />
           ))}
         </Swiper>
