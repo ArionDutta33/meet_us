@@ -53,3 +53,8 @@ create table meetup_attendees (
   status text check(status in ('going', 'maybe', 'not_going')) default 'maybe', -- RSVP status
   created_at timestamp with time zone default now()
 );
+
+
+
+
+https://geocode.maps.co/search?q=address&api_key=67397adae9598411875177wqu39d2d0

@@ -1,10 +1,21 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, TextInput } from 'react-native';
 
 const Create = () => {
   return (
-    <View>
-      <Text>Create</Text>
+    <View className="flex-1 border">
+      <View className="border">
+        <Text>Title</Text>
+        <TextInput placeholder="Enter the event title" />
+      </View>
+      <View className="border">
+        <Text>Description</Text>
+        <TextInput placeholder="Enter the event details" />
+      </View>
+      <View className="border">
+        <Text>Location</Text>
+        <TextInput placeholder="Enter full event details" />
+      </View>
     </View>
   );
 };
