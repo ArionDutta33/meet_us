@@ -28,6 +28,22 @@ const ProfileScreen = () => {
   //get the authenticated user email
   const { user: authenticatedUser } = useAuth();
 
+  //get user profile
+  const getProfile = async () => {
+    setLoading(true);
+    const { data: profiles, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', authenticatedUser?.id)
+      .single();
+    if (!error) {
+      setFullName(profiles.full_name);
+      setBio(profiles.bio);
+      setAddress(profiles.address);
+    }
+    setLoading(false);
+  };
+
   //handle profile update
   const onUpdateProfile = async () => {
     setLoading(true);
@@ -62,12 +78,20 @@ const ProfileScreen = () => {
         <Image
           className=" rounded-2xl"
           style={{ width: 300, height: 200 }}
-          source={{ uri: user.user.cover_photo_url }}
+          source={{
+            uri:
+              user.user.cover_photo_url ||
+              'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
+          }}
         />
         <Image
           className="absolute bottom-[-50] rounded-full"
           style={{ width: 100, height: 100 }}
-          source={{ uri: user.user.profile_picture_url }}
+          source={{
+            uri:
+              user.user.profile_photo_url ||
+              'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
+          }}
         />
         <AntDesign
           name="camera"
@@ -80,7 +104,7 @@ const ProfileScreen = () => {
         <Text className="text-center font-bold text-blue-500">Change Profile</Text>
       </View>
       <View className="  ">
-        <Text className="py-2 text-center text-sm">{user.user.location}</Text>
+        <Text className="py-2 text-center text-sm">{address}</Text>
       </View>
       <View className="mx-4 gap-4  ">
         <Text>Name</Text>
