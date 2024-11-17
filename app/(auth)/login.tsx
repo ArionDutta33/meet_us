@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Alert, StyleSheet, View, AppState, TextInput, Button } from 'react-native';
 
 import { supabase } from '~/lib/supabase';
+
 // Tells Supabase Auth to continuously refresh the session automatically if
 // the app is in the foreground. When this is added, you will continue to receive
 // `onAuthStateChange` events with the `TOKEN_REFRESHED` or `SIGNED_OUT` event
@@ -49,8 +50,7 @@ export default function Auth() {
     <View style={styles.container}>
       <View style={[styles.verticallySpaced, styles.mt20]}>
         <TextInput
-          className="border border-gray-300"
-          onChangeText={(text) => setEmail(text)}
+          onChangeText={(text: string) => setEmail(text)}
           value={email}
           placeholder="email@address.com"
           autoCapitalize="none"
@@ -58,8 +58,7 @@ export default function Auth() {
       </View>
       <View style={styles.verticallySpaced}>
         <TextInput
-          onChangeText={(text) => setPassword(text)}
-          className="border border-gray-300"
+          onChangeText={(text: string) => setPassword(text)}
           value={password}
           secureTextEntry
           placeholder="Password"

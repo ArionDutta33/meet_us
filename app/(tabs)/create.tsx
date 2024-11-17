@@ -1,7 +1,7 @@
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -12,7 +12,12 @@ import {
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Keyboard,
+  Alert,
+  ActivityIndicator,
 } from 'react-native';
+
+import { useAuth } from '~/context/AuthProvider';
+import { supabase } from '~/lib/supabase';
 
 const Create = () => {
   const [title, setTitle] = useState('');
@@ -23,21 +28,61 @@ const Create = () => {
   const [showPicker, setShowPicker] = useState(false);
   const [eventDate, setEventDate] = useState('');
   const [loading, setLoading] = useState(false);
+  const [latitude, setLatitude] = useState(0);
+  const [longitude, setLongitutde] = useState(0);
   const [status, setStatus] = useState('');
+  //get the authenticateduser
+  const { session } = useAuth();
 
   //get geocoding data
   const geoCode = async () => {
     const encodedLocation = encodeURIComponent(location);
-    setLoading(true);
     try {
       const data = await axios.get(
         `https://geocode.maps.co/search?q=${encodedLocation}&api_key=${process.env.EXPO_PUBLIC_GEO_API_KEY}`
       );
-      console.log(JSON.stringify(data, null, 2));
-      console.log(data.data[0].lat, data.data[0].lon);
+      if (data.data && data.data.length > 0) {
+        setLatitude(data.data[0].lat);
+        setLongitutde(data.data[0].lon);
+      }
+    } catch (error: any) {
+      Alert.alert(error.message);
+    }
+  };
+
+  //handle submission
+  const handleSubmit = async () => {
+    setLoading(true);
+    try {
+      await geoCode();
+      const { data, error } = await supabase
+        .from('meetups')
+        .insert([
+          {
+            user_id: session?.user.id,
+            title,
+            description,
+            location,
+            event_date: date,
+            max_attendees: attendees,
+            latitude,
+            longitude,
+            status,
+            photos: [
+              'https://images.pexels.com/photos/7689853/pexels-photo-7689853.jpeg?auto=compress&cs=tinysrgb&w=600',
+            ],
+          },
+        ])
+
+        .select();
+      if (error) {
+        Alert.alert(error.message);
+        setLoading(false);
+        console.log(error);
+      }
       setLoading(false);
-    } catch (error) {
-      console.log(JSON.stringify(error, null, 2));
+    } catch (error: any) {
+      Alert.alert(error.message);
       setLoading(false);
     }
   };
@@ -64,6 +109,13 @@ const Create = () => {
     }
   };
 
+  if (loading) {
+    return (
+      <View className="flex-1 items-center justify-center">
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
   return (
     <KeyboardAvoidingView
       className="flex-1"
@@ -133,7 +185,18 @@ const Create = () => {
             <TextInput
               keyboardType="numeric"
               value={attendees.toString()}
-              onChangeText={(text) => setAttendees(parseInt(text, 10))}
+              onChangeText={(text) => {
+                // If the text is empty or not a valid number, set the attendees to 0 (or any default value)
+                const parsedValue = parseInt(text, 10);
+
+                // If parsed value is a valid number, update the state
+                if (!isNaN(parsedValue)) {
+                  setAttendees(parsedValue);
+                } else {
+                  // If the value is not a number, you can decide how to handle it
+                  setAttendees(0); // or leave it as an empty string
+                }
+              }}
               placeholder="3"
               className="border-b border-gray-400 py-2"
             />
@@ -153,7 +216,7 @@ const Create = () => {
 
           {/* Create Button */}
           <Pressable
-            onPress={geoCode}
+            onPress={handleSubmit}
             className="mt-4 items-center justify-center rounded-2xl bg-orange-500 py-3">
             <Text className="text-xl font-bold text-white">Create</Text>
           </Pressable>
@@ -164,3 +227,5 @@ const Create = () => {
 };
 
 export default Create;
+
+//*og

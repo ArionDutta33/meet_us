@@ -1,5 +1,5 @@
 import { AntDesign } from '@expo/vector-icons';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -43,6 +43,10 @@ const ProfileScreen = () => {
     }
     setLoading(false);
   };
+
+  useEffect(() => {
+    getProfile();
+  }, []);
 
   //handle profile update
   const onUpdateProfile = async () => {
@@ -146,6 +150,11 @@ const ProfileScreen = () => {
       </View>
       <Pressable onPress={onUpdateProfile} className="mx-4 my-6 rounded-lg   bg-blue-500 py-4 ">
         <Text className="text-center font-bold text-white">Update Profile</Text>
+      </Pressable>
+      <Pressable
+        onPress={() => supabase.auth.signOut()}
+        className="mx-4  rounded-lg   bg-blue-500 py-4 ">
+        <Text className="text-center font-bold text-white">Sign Out</Text>
       </Pressable>
       <View className="mx-4 my-6  h-72 gap-4  ">
         <Text>Events Organised</Text>
