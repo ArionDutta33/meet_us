@@ -129,6 +129,7 @@ const ProfileScreen = () => {
       <View className="mx-4 gap-4  ">
         <Text>Email</Text>
         <TextInput
+          editable={false}
           value={authenticatedUser?.email}
           placeholder="Enter your email"
           className="border border-gray-400 text-gray-500"
