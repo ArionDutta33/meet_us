@@ -25,6 +25,7 @@ type Event = {
 };
 const FeedScreen = () => {
   const [events, setEvents] = useState<Event[]>([]);
+  const [refreshing, setRefreshing] = useState<boolean>(false);
   const getMeetUps = async () => {
     try {
       const response = await axios.get(`${process.env.EXPO_PUBLIC_API}/meetus`);
@@ -36,6 +37,11 @@ const FeedScreen = () => {
       console.log(JSON.stringify(error, null, 2));
     }
   };
+  const onRefresh = async () => {
+    setRefreshing(true); // Show the refresh indicator
+    await getMeetUps(); // Fetch events again
+    setRefreshing(false); // Hide the refresh indicator
+  };
   useEffect(() => {
     getMeetUps();
   }, []);
@@ -43,6 +49,8 @@ const FeedScreen = () => {
   return (
     <View>
       <FlatList
+        onRefresh={onRefresh}
+        refreshing={refreshing}
         data={events}
         renderItem={({ item }) => (
           <Link href={`/details/${item.id}`} asChild>
