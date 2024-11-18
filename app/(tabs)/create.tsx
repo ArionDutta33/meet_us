@@ -14,7 +14,10 @@ import {
   Keyboard,
   Alert,
   ActivityIndicator,
+  ToastAndroid,
 } from 'react-native';
+
+import { useAuth } from '~/context/AuthProvider';
 
 const Create = () => {
   const [title, setTitle] = useState('');
@@ -28,8 +31,9 @@ const Create = () => {
   const [latitude, setLatitude] = useState(0);
   const [longitude, setLongitutde] = useState(0);
   const [status, setStatus] = useState('');
-  //get the authenticateduser
 
+  //get the authenticateduser
+  const { token, user } = useAuth();
   //get geocoding data
   const geoCode = async () => {
     const encodedLocation = encodeURIComponent(location);
@@ -47,7 +51,45 @@ const Create = () => {
   };
 
   //handle submission
-  const handleSubmit = async () => {};
+  const handleSubmit = async () => {
+    setLoading(true);
+    try {
+      geoCode();
+      const data = await axios.post(
+        `${process.env.EXPO_PUBLIC_API}/meetus`,
+        {
+          userId: user?._id,
+          title,
+          description,
+          location,
+          eventDate: date,
+          maxAttendees: attendees,
+          latitude,
+          longitude,
+          status,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `${token}`,
+          },
+        }
+      );
+      if (data.status === 201) {
+        setLoading(false);
+        console.log(data);
+        ToastAndroid.show('Event created successfully', ToastAndroid.LONG);
+      } else {
+        setLoading(false);
+        ToastAndroid.show('Failed to create event', ToastAndroid.SHORT);
+        console.log(data);
+      }
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+      ToastAndroid.show(`${error}`, ToastAndroid.SHORT);
+    }
+  };
 
   // Toggle the visibility of the date picker
   const toggleDatePicker = () => {

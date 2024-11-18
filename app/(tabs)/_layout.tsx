@@ -1,5 +1,6 @@
 import { Entypo } from '@expo/vector-icons';
 import AntDesign from '@expo/vector-icons/AntDesign';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Link, Redirect, Tabs } from 'expo-router';
 
 import { HeaderButton } from '../../components/HeaderButton';
@@ -8,9 +9,9 @@ import { TabBarIcon } from '../../components/TabBarIcon';
 import { useAuth } from '~/context/AuthProvider';
 
 export default function TabLayout() {
-  const { token } = useAuth();
-  if (!token) {
-    return <Redirect href="/login" />;
+  const { user } = useAuth();
+  if (!user) {
+    return <Redirect href="/(auth)/login" />;
   }
   return (
     <Tabs

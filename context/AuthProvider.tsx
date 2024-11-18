@@ -14,10 +14,14 @@ type User = {
 type AuthContextType = {
   user: User | null;
   token: string;
+  setUser: (user: User | null) => void;
+  setToken: (token: string) => void;
 };
 const AuthContext = createContext<AuthContextType>({
   user: null,
   token: '',
+  setUser: () => {},
+  setToken: () => {},
 });
 const AuthProvider = ({ children }: PropsWithChildren) => {
   const [user, setUser] = useState<User | null>(null);
@@ -38,7 +42,11 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
     fetchAuthData();
   }, []);
 
-  return <AuthContext.Provider value={{ user, token }}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ user, token, setToken, setUser }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 export const useAuth = () => useContext(AuthContext);

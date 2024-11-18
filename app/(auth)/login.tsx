@@ -1,57 +1,48 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import { Stack } from 'expo-router';
+import { Redirect, Stack } from 'expo-router';
 import React, { useState } from 'react';
 import { View, Text, TextInput, Pressable, ToastAndroid, ActivityIndicator } from 'react-native';
+
+import { useAuth } from '~/context/AuthProvider';
 const Auth = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
 
+  const { setUser, setToken, user, token } = useAuth();
+  if (token) {
+    return <Redirect href="/(tabs)" />;
+  }
   const onHandleLogin = async () => {
     setLoading(true);
-    setError('');
     try {
-      // Basic validation: Check if fields are empty or just contain spaces
-      if (!email.trim() || !password.trim()) {
+      if (!email || !password) {
         setError('All fields are required');
         setLoading(false);
         return;
       }
-
-      // Make the login request
-      const response = await axios.post(`${process.env.EXPO_PUBLIC_API}/login`, {
+      const data = await axios.post(`${process.env.EXPO_PUBLIC_API}/login`, {
         email,
         password,
       });
-
-      // Handle successful response
-      if (response.status === 200) {
+      if (data.status === 200) {
         setLoading(false);
-
-        // Assuming the response contains a user object without the password and a token
-        const { userWithoutPassword, token } = response.data;
-
-        // Save user data and token in AsyncStorage
-        await AsyncStorage.setItem('@auth', JSON.stringify({ user: userWithoutPassword, token }));
-
-        // Clear input fields
-        setEmail('');
-        setPassword('');
-
-        // Show success toast
-        ToastAndroid.show('Login successful', ToastAndroid.LONG);
+        setUser(data.data.userWithoutPassword);
+        setToken(data.data.token);
+        ToastAndroid.show('Login successful', ToastAndroid.SHORT);
+        await AsyncStorage.setItem(
+          '@auth',
+          JSON.stringify({ user: data.data.userWithoutPassword, token: data.data.token })
+        );
       } else {
         setLoading(false);
-        setError('Unexpected response from server');
+        console.log(data);
       }
     } catch (error) {
       setLoading(false);
-
-      // More specific error handling (e.g., network error or wrong credentials)
-
-      console.log('Login error:', error);
+      console.log(error);
     }
   };
 
