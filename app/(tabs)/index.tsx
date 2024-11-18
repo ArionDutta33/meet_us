@@ -5,7 +5,7 @@ import { View, Text, FlatList, ScrollView, Pressable, ToastAndroid } from 'react
 
 import EventItem from '~/components/EventItem';
 type Event = {
-  id: string;
+  _id: string;
   name: string;
   title: string;
   description: string;
@@ -53,14 +53,8 @@ const FeedScreen = () => {
         data={events}
         refreshing={refreshing}
         onRefresh={onRefresh}
-        renderItem={({ item }) => (
-          <Link href={`/details/${item.id}`} asChild>
-            <Pressable>
-              <EventItem event={item} />
-            </Pressable>
-          </Link>
-        )}
-        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => <EventItem event={item} />}
+        keyExtractor={(item) => item._id}
       />
     </View>
   );

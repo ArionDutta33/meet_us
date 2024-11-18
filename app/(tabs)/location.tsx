@@ -15,24 +15,24 @@ import {
 import MapView, { Callout, Marker, Overlay, Polygon } from 'react-native-maps';
 
 import { useAuth } from '~/context/AuthProvider';
-type Event = {
-  id: number;
-  name: string;
-  title: string;
-  description: string;
-  location: {
-    type: string;
-    coordinates: number[];
-  };
-  date: string;
-  event_date: string;
-  max_attendees: number;
-  status: string;
-  cover_photo_url: string;
-  created_at: string;
-  updated_at: string;
-  photos: string[];
-};
+// type Event = {
+//   id: number;
+//   name: string;
+//   title: string;
+//   description: string;
+//   location: {
+//     type: string;
+//     coordinates: number[];
+//   };
+//   date: string;
+//   event_date: string;
+//   max_attendees: number;
+//   status: string;
+//   cover_photo_url: string;
+//   created_at: string;
+//   updated_at: string;
+//   photos: string[];
+// };
 
 export default function MapScreen() {
   const [location, setLocation] = useState(null);
