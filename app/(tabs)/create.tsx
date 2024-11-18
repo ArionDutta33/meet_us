@@ -29,7 +29,7 @@ const Create = () => {
   const [eventDate, setEventDate] = useState('');
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState('');
-
+  // !!fix later api calls
   //get the authenticateduser
   const { token, user } = useAuth();
   //get geocoding data
@@ -202,7 +202,7 @@ const Create = () => {
           {/* Create Button */}
           <Pressable
             onPress={handleSubmit}
-            className="mt-4 items-center justify-center rounded-2xl bg-orange-500 py-3">
+            className="mb-12 mt-4 items-center justify-center rounded-2xl bg-orange-500 py-3">
             <Text className="text-xl font-bold text-white">Create</Text>
           </Pressable>
         </ScrollView>

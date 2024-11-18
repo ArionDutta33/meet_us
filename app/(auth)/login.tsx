@@ -38,11 +38,13 @@ const Auth = () => {
         );
       } else {
         setLoading(false);
-        console.log(data);
+        ToastAndroid.show('Failed to login', ToastAndroid.SHORT);
+        console.log(JSON.stringify(data, null, 2));
       }
     } catch (error) {
       setLoading(false);
-      console.log(error);
+      ToastAndroid.show('Failed to login', ToastAndroid.SHORT);
+      console.log(JSON.stringify(error, null, 2));
     }
   };
 

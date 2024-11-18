@@ -3,15 +3,40 @@ import axios from 'axios';
 import * as Location from 'expo-location';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Platform, ToastAndroid } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Platform,
+  ToastAndroid,
+  Touchable,
+  TouchableOpacity,
+} from 'react-native';
 import MapView, { Callout, Marker, Overlay, Polygon } from 'react-native-maps';
 
-import { events } from '~/assets/data';
 import { useAuth } from '~/context/AuthProvider';
+type Event = {
+  id: number;
+  name: string;
+  title: string;
+  description: string;
+  location: {
+    type: string;
+    coordinates: number[];
+  };
+  date: string;
+  event_date: string;
+  max_attendees: number;
+  status: string;
+  cover_photo_url: string;
+  created_at: string;
+  updated_at: string;
+  photos: string[];
+};
 
 export default function MapScreen() {
   const [location, setLocation] = useState(null);
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState<Event[]>([]);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const { token } = useAuth();
   useEffect(() => {
@@ -58,7 +83,6 @@ export default function MapScreen() {
             title={events[0].title}
             description={events[0].description}
             onPress={() => router.push(`/details/${events[0].id}`)}
-            // children={<Text>Marker</Text>}
             onCalloutPress={() => {
               console.log('Marker pressed');
             }}
@@ -66,14 +90,10 @@ export default function MapScreen() {
           />
           {events.map((event) => (
             <Marker
-              key={event._id}
+              className="realative"
+              key={event.id}
               title={event.title}
               description={event.description}
-              onPress={() => router.push(`/details/${event.id}`)}
-              // children={<Text>Marker</Text>}
-              onCalloutPress={() => {
-                console.log('Marker pressed');
-              }}
               coordinate={{
                 latitude: event.location.coordinates[0],
                 longitude: event.location.coordinates[1],
