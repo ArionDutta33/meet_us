@@ -185,7 +185,7 @@ const ProfileScreen = () => {
       <Pressable onPress={onUpdateProfile} className="mx-4 my-6 rounded-lg bg-blue-500 py-4">
         <Text className="text-center font-bold text-white">Update Profile</Text>
       </Pressable>
-      <Pressable onPress={onSignOut} className="mx-4 rounded-lg bg-blue-500 py-4">
+      <Pressable onPress={onSignOut} className="mx-4 mb-8 rounded-lg bg-blue-500 py-4">
         <Text className="text-center font-bold text-white">Sign Out</Text>
       </Pressable>
     </ScrollView>

@@ -28,44 +28,25 @@ const Create = () => {
   const [showPicker, setShowPicker] = useState(false);
   const [eventDate, setEventDate] = useState('');
   const [loading, setLoading] = useState(false);
-  const [latitude, setLatitude] = useState(0);
-  const [longitude, setLongitutde] = useState(0);
   const [status, setStatus] = useState('');
 
   //get the authenticateduser
   const { token, user } = useAuth();
   //get geocoding data
-  const geoCode = async () => {
-    const encodedLocation = encodeURIComponent(location);
-    try {
-      const data = await axios.get(
-        `https://geocode.maps.co/search?q=${encodedLocation}&api_key=${process.env.EXPO_PUBLIC_GEO_API_KEY}`
-      );
-      if (data.data && data.data.length > 0) {
-        setLatitude(data.data[0].lat);
-        setLongitutde(data.data[0].lon);
-      }
-    } catch (error: any) {
-      Alert.alert(error.message);
-    }
-  };
 
   //handle submission
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      geoCode();
+      setLoading(false);
       const data = await axios.post(
         `${process.env.EXPO_PUBLIC_API}/meetus`,
         {
-          userId: user?._id,
           title,
           description,
           location,
           eventDate: date,
           maxAttendees: attendees,
-          latitude,
-          longitude,
           status,
         },
         {
