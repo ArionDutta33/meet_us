@@ -36,17 +36,18 @@ const ProfileScreen = () => {
     try {
       const data = await axios.get(`${process.env.EXPO_PUBLIC_API}/profile/${user?._id}`);
       if (data.data.status === '201') {
+        setLoading(false);
         setFullName(data.data.user.fullName);
         setBio(data.data.user.bio);
         setAddress(data.data.user.address);
         setEvents(data.data.user.events);
+      } else {
         setLoading(false);
+        console.log(JSON.stringify(data, null, 2));
       }
     } catch (error) {
       setLoading(false);
       console.log(error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -78,11 +79,9 @@ const ProfileScreen = () => {
       setLoading(false);
       ToastAndroid.show(`${error}`, ToastAndroid.SHORT);
       console.log(error);
-    } finally {
-      setLoading(false);
     }
   };
-  console.log(loading);
+
   if (loading) {
     return (
       <View className="flex-1 items-center  justify-center">
