@@ -1,7 +1,7 @@
 import * as Location from 'expo-location';
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Platform } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
+import MapView, { Callout, Marker, Polygon } from 'react-native-maps';
 
 export default function MapScreen() {
   const [location, setLocation] = useState(null);
@@ -44,6 +44,31 @@ export default function MapScreen() {
           }}>
           {/* Place a marker at the device's current location */}
           <Marker coordinate={{ latitude: location.latitude, longitude: location.longitude }} />
+          <Marker
+            style={{ width: 50, height: 50, backgroundColor: 'red' }}
+            className="bg-red-500 text-red-700"
+            coordinate={{ latitude: 37.78825, longitude: -122.4324 }}
+            pinColor="blue">
+            <Callout
+              onPress={() => console.log('Callout pressed')}
+              style={{ backgroundColor: 'white', padding: 10, height: 100, width: 100 }}>
+              <View
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  height: '100%',
+                  width: '100%',
+                }}>
+                <Text>Test</Text>
+              </View>
+            </Callout>
+          </Marker>
+          <Polygon
+            strokeColor="red"
+            fillColor="rgba(255,0,0,0.5)"
+            strokeWidth={2}
+            coordinates={[{ latitude: 51.509865, longitude: -0.118092 }]}
+          />
         </MapView>
       )}
     </View>
